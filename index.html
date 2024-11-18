@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="content"></div>
+    <form action="alta.php">
+        <button type="submit">Saludos</button>
+    </form>
+    <script>
+        const content = document.getElementById('content'); // Obtén el contenedor del contenido
+
+        // Opciones de la solicitud fetch
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+        };
+
+        // Función principal para obtener datos e incrustar el HTML
+        fetch("http://localhost/bephp/public/products/", requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Genera dinámicamente el HTML
+                let text = '<ul>';
+                result.registros.forEach(element => {
+                    text += `<li id='${element.id}'>${element.nombre}, ${element.descripcion}, $${element.creado_en}</li>`;
+                });
+                text += '</ul>';
+                content.innerHTML = text; // Incrusta el HTML generado
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+                content.innerHTML = '<p>Hubo un error al cargar los datos.</p>';
+            });
+    </script>
+</body>
+
+
+</html>
